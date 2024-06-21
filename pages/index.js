@@ -22,8 +22,8 @@ const query = groq`*[_type == "post"]{
   slug,
   body,
   publishedAt,
-  "seoTitle": seo.title,
-  "seoDescription": seo.description
+  "seoTitle": seoTitle,
+  "seoDescription": seoDescription
 }`;
 
 export default function Index({ posts, globalData }) {
@@ -78,8 +78,12 @@ export default function Index({ posts, globalData }) {
 }
 
 export async function getStaticProps() {
-  const posts = await client.fetch(query);
-  const globalData = getGlobalData();
-
-  return { props: { posts, globalData } };
+  try {
+    const posts = await client.fetch(query);
+    const globalData = getGlobalData();
+    return { props: { posts, globalData } };
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    return { props: { posts: [] } };
+  }
 }
