@@ -8,13 +8,14 @@ const client = sanityClient({
 });
 
 exports.handler = async (event) => {
-  // Log the incoming event for debugging
+  // Log the received event for debugging purposes
   console.log('Received event:', event);
 
   // Parse the event body
   let data;
   try {
     data = JSON.parse(event.body);
+    console.log('Parsed data:', data);
   } catch (error) {
     console.error('Failed to parse event body:', error);
     return {
@@ -23,7 +24,7 @@ exports.handler = async (event) => {
     };
   }
 
-  // Create the document
+  // Create the document to be sent to Sanity
   const doc = {
     _type: 'post',
     title: data.title,
