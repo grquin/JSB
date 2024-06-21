@@ -7,6 +7,7 @@ import Layout, { GradientBackground } from '../components/Layout';
 import ArrowIcon from '../components/ArrowIcon';
 import { getGlobalData } from '../utils/global-data';
 import SEO from '../components/SEO';
+import IntakeForm from '../components/IntakeForm';
 
 export default function Index({ posts, globalData }) {
   return (
@@ -17,6 +18,7 @@ export default function Index({ posts, globalData }) {
         <h1 className="text-3xl lg:text-5xl text-center mb-12">
           {globalData.blogTitle}
         </h1>
+        <IntakeForm />
         <ul className="w-full">
           {posts.map((post) => (
             <li
@@ -27,7 +29,6 @@ export default function Index({ posts, globalData }) {
                 as={`/posts/${post.filePath.replace(/\.mdx?$/, '')}`}
                 href={`/posts/[slug]`}
                 className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4">
-
                 {post.data.date && (
                   <p className="uppercase mb-3 font-bold opacity-60">
                     {post.data.date}
@@ -40,7 +41,6 @@ export default function Index({ posts, globalData }) {
                   </p>
                 )}
                 <ArrowIcon className="mt-4" />
-
               </Link>
             </li>
           ))}

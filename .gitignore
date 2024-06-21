@@ -1,5 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# files
+index_copy.js
+.env
+drive_credentials.json
+sheet_credentials.json
+
 # dependencies
 /node_modules
 /.pnp
