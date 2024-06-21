@@ -22,8 +22,8 @@ const query = groq`*[_type == "post"]{
   slug,
   body,
   publishedAt,
-  seoTitle,
-  seoDescription
+  "seoTitle": seo.title,
+  "seoDescription": seo.description
 }`;
 
 export default function Index({ posts, globalData }) {
