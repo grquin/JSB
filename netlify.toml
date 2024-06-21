@@ -1,6 +1,7 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  functions = "functions"  # Ensure this line is added to specify the functions directory
 
 [[redirects]]
   from = "/api/*"

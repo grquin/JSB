@@ -13,7 +13,7 @@ import { getGlobalData } from '../utils/global-data';
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  useCdn: false, // Set to true if you want to use the CDN for faster performance
+  useCdn: false,
   apiVersion: '2023-06-01',
 });
 
@@ -79,11 +79,13 @@ export default function Index({ posts, globalData }) {
 
 export async function getStaticProps() {
   try {
+    console.log('Fetching posts from Sanity...');
     const posts = await client.fetch(query);
+    console.log('Fetched posts:', posts);
     const globalData = getGlobalData();
     return { props: { posts, globalData } };
   } catch (error) {
-    console.error("Failed to fetch posts:", error);
+    console.error('Failed to fetch posts:', error);
     return { props: { posts: [] } };
   }
 }
