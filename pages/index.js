@@ -11,8 +11,8 @@ import IntakeForm from '../components/IntakeForm';
 import { getGlobalData } from '../utils/global-data';
 
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID,
-  dataset: process.env.SANITY_DATASET,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   useCdn: false,
   apiVersion: '2023-06-01',
 });
