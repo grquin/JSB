@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createClient } from 'next-sanity';
 import { groq } from 'next-sanity';
-
+import Link from 'next/link';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout, { GradientBackground } from '../components/Layout';
@@ -11,8 +10,8 @@ import SEO from '../components/SEO';
 import IntakeForm from '../components/IntakeForm';
 
 const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  projectId: process.env.SANITY_PROJECT_ID,
+  dataset: process.env.SANITY_DATASET,
   useCdn: false,
   apiVersion: '2023-06-01',
 });
@@ -26,13 +25,7 @@ const query = groq`*[_type == "post"]{
   seoDescription
 }`;
 
-export default function Index({ globalData }) {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    client.fetch(query).then((data) => setPosts(data));
-  }, []);
-
+export default function Index({ posts, globalData }) {
   return (
     <Layout>
       <SEO title={globalData.name} description={globalData.blogTitle} />
@@ -51,10 +44,11 @@ export default function Index({ globalData }) {
               <Link
                 as={`/posts/${post.slug.current}`}
                 href={`/posts/[slug]`}
-                className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4">
+                className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4"
+              >
                 {post.publishedAt && (
                   <p className="uppercase mb-3 font-bold opacity-60">
-                    {new Date(post.publishedAt).toLocaleDateString()}
+                    {new Date(post.publishedAt).toDateString()}
                   </p>
                 )}
                 <h2 className="text-2xl md:text-3xl">{post.title}</h2>
@@ -83,7 +77,8 @@ export default function Index({ globalData }) {
 }
 
 export async function getStaticProps() {
+  const posts = await client.fetch(query);
   const globalData = getGlobalData();
 
-  return { props: { globalData } };
+  return { props: { posts, globalData } };
 }
