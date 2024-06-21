@@ -1,15 +1,38 @@
 import Link from 'next/link';
-import { getPosts } from '../utils/mdx-utils';
+import { useEffect, useState } from 'react';
+import { createClient } from 'next-sanity';
+import { groq } from 'next-sanity';
 
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout, { GradientBackground } from '../components/Layout';
 import ArrowIcon from '../components/ArrowIcon';
-import { getGlobalData } from '../utils/global-data';
 import SEO from '../components/SEO';
 import IntakeForm from '../components/IntakeForm';
 
-export default function Index({ posts, globalData }) {
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  useCdn: false,
+  apiVersion: '2023-06-01',
+});
+
+const query = groq`*[_type == "post"]{
+  title,
+  slug,
+  body,
+  publishedAt,
+  seoTitle,
+  seoDescription
+}`;
+
+export default function Index({ globalData }) {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    client.fetch(query).then((data) => setPosts(data));
+  }, []);
+
   return (
     <Layout>
       <SEO title={globalData.name} description={globalData.blogTitle} />
@@ -22,22 +45,22 @@ export default function Index({ posts, globalData }) {
         <ul className="w-full">
           {posts.map((post) => (
             <li
-              key={post.filePath}
+              key={post.slug.current}
               className="md:first:rounded-t-lg md:last:rounded-b-lg backdrop-blur-lg bg-white dark:bg-black dark:bg-opacity-30 bg-opacity-10 hover:bg-opacity-20 dark:hover:bg-opacity-50 transition border border-gray-800 dark:border-white border-opacity-10 dark:border-opacity-10 border-b-0 last:border-b hover:border-b hovered-sibling:border-t-0"
             >
               <Link
-                as={`/posts/${post.filePath.replace(/\.mdx?$/, '')}`}
+                as={`/posts/${post.slug.current}`}
                 href={`/posts/[slug]`}
                 className="py-6 lg:py-10 px-6 lg:px-16 block focus:outline-none focus:ring-4">
-                {post.data.date && (
+                {post.publishedAt && (
                   <p className="uppercase mb-3 font-bold opacity-60">
-                    {post.data.date}
+                    {new Date(post.publishedAt).toLocaleDateString()}
                   </p>
                 )}
-                <h2 className="text-2xl md:text-3xl">{post.data.title}</h2>
-                {post.data.description && (
+                <h2 className="text-2xl md:text-3xl">{post.title}</h2>
+                {post.seoDescription && (
                   <p className="mt-3 text-lg opacity-60">
-                    {post.data.description}
+                    {post.seoDescription}
                   </p>
                 )}
                 <ArrowIcon className="mt-4" />
@@ -59,9 +82,8 @@ export default function Index({ posts, globalData }) {
   );
 }
 
-export function getStaticProps() {
-  const posts = getPosts();
+export async function getStaticProps() {
   const globalData = getGlobalData();
 
-  return { props: { posts, globalData } };
+  return { props: { globalData } };
 }
