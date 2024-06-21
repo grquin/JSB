@@ -28,6 +28,7 @@
     "next": "^14.1.4",
     "next-mdx-remote": "^5.0.0",
     "next-remote-watch": "2.0.0",
+    "next-sanity": "^9.4.2",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
