@@ -1,6 +1,6 @@
-const sanityClient = require('@sanity/client');
+const { createClient } = require('@sanity/client');
 
-const client = sanityClient({
+const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   token: process.env.SANITY_API_TOKEN,
@@ -37,6 +37,9 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Failed to create document:', error);
+    if (error.response) {
+      console.error('Sanity response error:', error.response.body);
+    }
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message }),
