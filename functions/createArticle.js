@@ -10,12 +10,20 @@ const client = createClient({
 exports.handler = async (event) => {
   console.log('Received event:', event);
 
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method Not Allowed' }),
+    };
+  }
+
   let data;
   try {
     data = JSON.parse(event.body);
     console.log('Parsed data:', data);
   } catch (error) {
-    console.error('Failed to parse event body:', error);
+    console.error('Failed to parse event body:', error.message);
+    console.error('Event body:', event.body);
     return {
       statusCode: 400,
       body: JSON.stringify({ error: 'Invalid JSON format' }),
@@ -36,7 +44,7 @@ exports.handler = async (event) => {
       body: JSON.stringify(createdDoc),
     };
   } catch (error) {
-    console.error('Failed to create document:', error);
+    console.error('Failed to create document:', error.message);
     if (error.response) {
       console.error('Sanity response error:', error.response.body);
     }

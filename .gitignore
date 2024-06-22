@@ -3,6 +3,7 @@
 # files
 index_copy.js
 .env
+.env.local
 drive_credentials.json
 sheet_credentials.json
 

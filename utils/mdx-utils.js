@@ -14,6 +14,8 @@ export const postFilePaths = fs
   // Only include md(x) files
   .filter((path) => /\.mdx?$/.test(path));
 
+// Commenting out MDX specific functions
+/*
 export const sortPostsByDate = (posts) => {
   return posts.sort((a, b) => {
     const aDate = new Date(a.data.date);
@@ -92,3 +94,4 @@ export const getPreviousPostBySlug = (slug) => {
     slug: previousPostSlug,
   };
 };
+*/
